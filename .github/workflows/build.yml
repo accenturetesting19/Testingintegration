@@ -55,7 +55,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         continue-on-error: true
         with:
-          image-ref: 'docker.io/${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+          image-ref: docker.io/sapnamanokar/webapp:${{github.sha}}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
