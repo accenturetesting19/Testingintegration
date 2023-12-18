@@ -51,8 +51,7 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: sapnamanokar/webapp
-          tags: |
-            type=ref,event=tag
+          
           
 
       - name: Run Trivy vulnerability scanner
@@ -70,7 +69,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
