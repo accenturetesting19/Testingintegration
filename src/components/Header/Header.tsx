@@ -2,10 +2,10 @@ export function Header() {
   return (
     <header className='App-header'>
       <p>
-        Edit <code>src/App.tsx</code> and save to reload.
+        Hello world as first line.
       </p>
       <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-        Hello World
+        Learn React
       </a>
     </header>
   );
