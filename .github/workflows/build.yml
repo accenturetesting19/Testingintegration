@@ -17,7 +17,7 @@ jobs:
       env:
         DOCKER_REPOSITORY: sapnamanokar # name of Docker Hub ID
         IMAGE_NAME: webapp
-        IMAGE_TAG: ${{ github.run_number }}
+        IMAGE_TAG: ${{ github.sha }}
       steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,8 +50,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: sapnamanokar/webapp
-          tags: |
-            type=ref,event=tag
+         
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         continue-on-error: true
