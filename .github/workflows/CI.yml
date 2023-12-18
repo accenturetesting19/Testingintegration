@@ -12,7 +12,7 @@ on:
       - master
 
 jobs:
-  job1:
+  CodeQLanalysis:
     runs-on: 'ubuntu-latest'
     name: scriptlanguageanalyse
     
@@ -55,17 +55,23 @@ jobs:
           category: "/language:${{matrix.language}}"
           upload: False
           output: sarif-results
-  job2:
-     needs: job1
+  Buildartifacts:
+     needs: CodeQLanalysis
      runs-on: 'ubuntu-latest'     
      steps:
+      - name: Install dependencies
+        run: npm install
       - name: Build artifacts
         run: npm run build
 
-  job3:
-     needs: job2
+  Testcoverage:
+     needs: Buildartifacts
      runs-on: 'ubuntu-latest'     
      steps:
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifacts
+        run: npm run build
       - name: Unittesting and coverage
         run: npm run test
        
