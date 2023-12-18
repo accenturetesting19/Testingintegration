@@ -12,11 +12,9 @@ on:
       - master
 
 jobs:
-  run-action:
-    name: Run action
-    runs-on: ubuntu-latest
-
-    steps:
+   runaction:
+      runs-on: ubuntu-latest 
+      steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
