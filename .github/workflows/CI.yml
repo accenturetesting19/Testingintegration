@@ -59,6 +59,8 @@ jobs:
      needs: CodeQLanalysis
      runs-on: 'ubuntu-latest'     
      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
       - name: Build artifacts
@@ -68,6 +70,8 @@ jobs:
      needs: Buildartifacts
      runs-on: 'ubuntu-latest'     
      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
       - name: Build artifacts
