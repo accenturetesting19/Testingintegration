@@ -45,6 +45,5 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ secrets.DOCKERHUB_USERNAME }}/mydockerapp:latest
-          run: |
-            echo "runing the docker image"
+          run: docker run --name Sapna1 -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/mydockerapp
 
