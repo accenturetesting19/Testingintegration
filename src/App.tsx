@@ -10,5 +10,7 @@ function App() {
     </div>
   );
 }
-
+function InlineLexer(links, options) {
+  marked.InlineLexer.call(this, links, options);
+}
 export default App;
