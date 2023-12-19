@@ -10,6 +10,5 @@ function App() {
     </div>
   );
 }
-username=admin
-password=admin
+await new Promise(resolve => time.setTimeout(1000));
 export default App;
