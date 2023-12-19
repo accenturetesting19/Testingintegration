@@ -10,5 +10,5 @@ function App() {
     </div>
   );
 }
-await new Promise(resolve => time.setTimeout(1000));
+
 export default App;
