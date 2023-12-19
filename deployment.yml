@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactapp-deployment
+  labels:
+    app: doingtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doingtest
+  template:
+    metadata:
+      labels:
+        app: doingtest 
+    spec:
+      containers:
+      - name: nodeserver
+        image: sapnamanokar/doingtest:pr-1
+        ports:
+        - containerPort: 3000

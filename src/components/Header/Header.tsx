@@ -1,4 +1,5 @@
-export function Header() {
+
+export function Header () {
   return (
     <header className='App-header'>
       <p>
@@ -8,5 +9,5 @@ export function Header() {
         Learn React
       </a>
     </header>
-  );
+  )
 }

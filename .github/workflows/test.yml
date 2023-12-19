@@ -33,9 +33,14 @@ jobs:
         run: npm run build
      # - name: Test and coverage
      #   run: npm run test
-      - name: Run my action
-        run: yarn start
-      - name: Run application
-        uses: ./
+      - name: Run kubernetes action
+        run: |
+         minikube status
+         kubectl apply -f deployment.yml
+         kubectl apply -f service.yml
+         kubectl get pods
+         kubectl get svc
+         
+
         
        
