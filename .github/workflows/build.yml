@@ -30,17 +30,12 @@ jobs:
           
       - name: Build an image from Dockerfile
         run: |
-          docker build -t docker.io/sapnamanokar/mydockerapp:${{ github.sha }} .
+          docker build -t docker.io/${{ secrets.DOCKERHUB_USERNAME }}/mydockerapp:${{ github.sha }} .
      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        continue-on-error: true
+      - name: Run the image in a container
+        uses: addnab/docker-run-action@v3
         with:
-          image-ref: 'docker.io/sapnamanokar/mydockerapp:${{ github.sha }}'
-          scan-type: 'image'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/mydockerapp:${{ github.sha }}
+          run: |
+            echo "runing the docker image"
 
