@@ -67,7 +67,7 @@ jobs:
            fetch-depth: 0
        - name: Analyze with SonarCloud
 
-         uses: SonarSource/sonarcloud-github-action@deploy
+         uses: SonarSource/sonarcloud-github-action@master
          with:
            projectBaseDir: src
            args: >
@@ -85,7 +85,7 @@ jobs:
      runs-on: 'ubuntu-latest'     
      steps:
       - name: SonarQube Quality Gate check
-        uses: sonarsource/sonarqube-quality-gate-action@deploy
+        uses: sonarsource/sonarqube-quality-gate-action@master
       # Force to fail step after specific time.
         timeout-minutes: 2
         env:
