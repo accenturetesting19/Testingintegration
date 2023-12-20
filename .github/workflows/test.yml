@@ -5,6 +5,7 @@ on:
       - dev
       - main
       - master
+      - ghpages
   pull_request:
     branches:
       - main
@@ -43,13 +44,7 @@ jobs:
         with:
          github-token: ${{ secrets.GITHUB_TOKEN }}
          test-command: "yarn jest --coverage"
-     # - name: Run kubernetes action
-     #   run: |
-     #    minikube status
-      #   kubectl apply -f deployment.yml
-       #  kubectl apply -f service.yml
-        # kubectl get pods
-        # kubectl get svc
+
          
 
         
