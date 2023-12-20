@@ -10,6 +10,7 @@ on:
       - main
       - dev
       - master
+      - ghpages
 
 jobs:
   run-action:
@@ -31,15 +32,24 @@ jobs:
 
       - name: Build
         run: npm run build
-     # - name: Test and coverage
-     #   run: npm run test
-      - name: Run kubernetes action
-        run: |
-         minikube status
-         kubectl apply -f deployment.yml
-         kubectl apply -f service.yml
-         kubectl get pods
-         kubectl get svc
+      - name: Test and coverage
+        run: npm run test
+      - name: coverage
+        uses: romeovs/lcov-reporter-action@v0.2.16
+        with:
+         lcov-file: ./coverage/lcov.info
+      - name: jestcoverage
+        uses: ziishaned/jest-reporter-action@v0.0.1
+        with:
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         test-command: "yarn jest --coverage"
+     # - name: Run kubernetes action
+     #   run: |
+     #    minikube status
+      #   kubectl apply -f deployment.yml
+       #  kubectl apply -f service.yml
+        # kubectl get pods
+        # kubectl get svc
          
 
         
