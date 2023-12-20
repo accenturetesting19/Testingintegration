@@ -67,13 +67,14 @@ jobs:
            fetch-depth: 0
        - name: Analyze with SonarCloud
 
-         uses: SonarSource/sonarcloud-github-action@master
+         uses: SonarSource/sonarcloud-github-action@deploy
          with:
            projectBaseDir: src
            args: >
             -Dsonar.organization=sonarscankey
             -Dsonar.projectKey=accenturetesting19_Testingintegration
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.qualitygate.wait=true
+            
            
          env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
@@ -84,7 +85,7 @@ jobs:
      runs-on: 'ubuntu-latest'     
      steps:
       - name: SonarQube Quality Gate check
-        uses: sonarsource/sonarqube-quality-gate-action@master
+        uses: sonarsource/sonarqube-quality-gate-action@deploy
       # Force to fail step after specific time.
         timeout-minutes: 2
         env:
