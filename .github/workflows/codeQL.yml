@@ -1,8 +1,5 @@
 name: "CodeQL Analysis"
-on:
-    pull_request:
-    # The branches below must be a subset of the branches above
-        branches: [ "deploy" , "main"]
+on: workflow_dispatch
    
 
 jobs:
