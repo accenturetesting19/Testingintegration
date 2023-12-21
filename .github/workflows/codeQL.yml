@@ -1,7 +1,9 @@
 name: "CodeQL Analysis"
-on: workflow_dispatch
-   
-
+on: 
+    pull_request:
+       branches: 
+        - gh-pages
+        
 jobs:
   analyze:
     name: Analyze
