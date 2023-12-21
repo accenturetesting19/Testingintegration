@@ -2,8 +2,6 @@ name: Continuousintegration
 on:
   push:
     branches:
-      - deploy
-      - main
       - master
   pull_request:
     branches:
