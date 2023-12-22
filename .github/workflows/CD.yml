@@ -27,4 +27,6 @@ jobs:
       url: 'http://dev.myapp.com'
     steps:
       - name: Deploy
-        run: yarn start
+        run: | 
+          npm run build
+          yarn start
