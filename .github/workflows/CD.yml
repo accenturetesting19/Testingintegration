@@ -11,15 +11,16 @@ jobs:
       
   DeployDev:
     name: Deploy to Dev 
+    runs-on: ubuntu-latest
     #if: github.event_name == 'pull_request'
     #needs: [Build]
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
     environment: 
       name: Development
       url: 'http://dev.myapp.com'
     steps:
       - name: checkout code
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Install dependencies
         run: npm install
       - name: Build artifacts
