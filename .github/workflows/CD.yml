@@ -1,0 +1,84 @@
+name: CI + CD
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  #workflow_dispatch:
+
+jobs:
+  Pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking out code
+        uses: actions/checkout@v4
+        
+      - name: extract git commit data
+        uses: rlespinasse/git-commit-data-action@v1.x
+        
+      - name: Update author information
+        run: echo ${{env.GIT_COMMIT_AUTHOR_NAME }} > AUTHOR
+        
+      - name: Raise PR
+        id: test1
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: "branch1"
+          base: master
+          title: "demo for auto pr"
+          committer: ${{env.GIT_COMMIT_AUTHOR_NAME }} <${{env.GIT_COMMIT_AUTHOR_EMAIL }}">
+          author: ${{env.GIT_COMMIT_AUTHOR_NAME }} <${{env.GIT_COMMIT_AUTHOR_EMAIL }}">
+          body:
+            This is to show automatic PR creation
+          token: ${{secrets.GITHUB_TOKEN }}
+          #delete-branch: true
+
+      - name: Pull request number
+        run: |
+          echo "Pull Request Number - ${{ github.event.pull_request.number }}"
+
+  Build:
+    runs-on: ubuntu-latest
+    needs: [Pull_request]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compile
+        run: echo Hello, world!
+    
+  DeployDev:
+    name: Deploy to Dev 
+    #if: github.event_name == 'pull_request'
+    needs: [Build]
+    runs-on: ubuntu-latest
+    environment: 
+      name: Development
+      url: 'http://dev.myapp.com'
+    steps:
+      - name: Deploy
+        run: echo I am deploying! 
+    
+  DeployStaging:
+    name: Deploy to Staging 
+    if: github.event.ref == 'refs/heads/master'
+    needs: [Build]
+    runs-on: ubuntu-latest
+    environment: 
+      name: Staging
+      url: 'http://test.myapp.com'
+    steps:
+      - name: Deploy
+        run: echo I am deploying! 
+            
+  DeployProd:
+    name: Deploy to Production 
+    needs: [DeployStaging]
+    runs-on: ubuntu-latest
+    environment: 
+      name: Production
+      url: 'http://www.myapp.com'
+    steps:
+      - name: Deploy
+        run: echo I am deploying! 
+    
