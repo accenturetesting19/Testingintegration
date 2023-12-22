@@ -16,6 +16,8 @@ jobs:
         run: npm install
       - name: Build artifacts
         run: npm run build
+      - name: deploy artifacts
+        run: yarn start
     
   DeployDev:
     name: Deploy to Dev 
@@ -26,7 +28,7 @@ jobs:
       name: Development
       url: 'http://dev.myapp.com'
     steps:
-      - name: Deploy
-        run: | 
-          npm run build
-          yarn start
+      - name: Build artifacts
+        run: npm run build
+      - name: deploy artifacts
+        run: yarn start
