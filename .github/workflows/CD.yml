@@ -2,9 +2,9 @@ name: Continuous Deployment
 
 on:
   push:
-    branches: [ env ]
+    branches: [ featureenv ]
   pull_request:
-    branches: [ env ]
+    branches: [ featureenv ]
   #workflow_dispatch:
 
 jobs:
