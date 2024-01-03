@@ -132,6 +132,19 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  Buildazure:
+     needs: Build_Docker_Image
+     runs-on: 'ubuntu-latest'  
+     steps:
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'reactapptesting1'
+      #    slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DB4D53E2B92A45BC8149B0AA82ED535C }}
+          package: .
+
 
 
 
