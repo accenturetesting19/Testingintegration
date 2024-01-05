@@ -65,7 +65,7 @@ jobs:
         with:
           app-name: ${ { secrets.AZURE_WEBAPP_NAME } }
           slot-name: "production"
-          publish-profile: ${ { secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55EC6728AD254B85B5676B8CA449260E } }
+          publish-profile: ${ { secrets.AZUREAPPSERVICE_PUBLISHPROFILE } }
           package: ${ { env.AZURE_WEBAPP_PACKAGE_PATH } }
 
   
@@ -94,6 +94,6 @@ jobs:
         with:
           app-name: ${ { secrets.AZURE_WEBAPP_NAME_PROD } }
           slot-name: "production"
-          publish-profile: ${ { secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55EC6728AD254B85B5676B8CA449260E } }
+          publish-profile: ${ { secrets.AZUREAPPSERVICE_PUBLISHPROFILE } }
           package: ${ { env.AZURE_WEBAPP_PACKAGE_PATH } }
           
