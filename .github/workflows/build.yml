@@ -2,13 +2,13 @@ name: Build
 on:
   push:
     branches:
-      - dev
+      - codequality
       - main
       - master
   pull_request:
     branches:
       - main
-      - dev
+      - codequality
       - master
 
 jobs:
@@ -28,11 +28,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
+      
+      - name: code quality
+        uses: stefanoeb/eslint-action@1.0.2
+        with:
+        files: src/
+        
       - name: Build
         run: npm run build
-     # - name: Test and coverage
-     #   run: npm run test
-      - name: Run my action
-        run: yarn start
+      - name: Test and coverage
+        run: npm run test
+
        

@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d13da362-c506-4a29-b409-777373415603/resourceGroups/reactapptesting1_group/providers/Microsoft.Web/sites/reactapptesting1",
+    "appService.deploySubpath": "build"
+}
