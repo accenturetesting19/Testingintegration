@@ -24,6 +24,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }} # optional
           working-dir: src/
+          all-files: true
           extensions: 'js,jsx,ts,tsx'
           annotations: true
        
