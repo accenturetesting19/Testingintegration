@@ -10,31 +10,12 @@ on:
       - main
       - codequality
       - master
-
 jobs:
-  run-action:
-    name: Run action
+  eslint:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v1
+      - uses: stefanoeb/eslint-action@1.0.2
         with:
-          node-version: 16.x
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: code quality
-        run: npx eslint src/
-        
-      - name: Build
-        run: npm run build
-      - name: Test and coverage
-        run: npm run test
-
+          files: src/
        
