@@ -30,9 +30,7 @@ jobs:
         run: npm ci
       
       - name: code quality
-        uses: stefanoeb/eslint-action@1.0.2
-        with:
-        files: src/
+        run: npx eslint src/
         
       - name: Build
         run: npm run build
