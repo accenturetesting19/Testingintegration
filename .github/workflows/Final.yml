@@ -113,7 +113,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
        
   Build_Docker_Image:
-     needs: Testcoverage
+     needs: CodeandTestcoverage
      runs-on: 'ubuntu-latest'     
      steps:
       - name: Checkout repository
