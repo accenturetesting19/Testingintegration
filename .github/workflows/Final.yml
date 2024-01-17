@@ -79,24 +79,7 @@ jobs:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
   
-  codeCoveragereport:
-      needs: Sonarcloud
-      runs-on: ubuntu-latest
-     
-      steps:
-       - uses: actions/checkout@v4
-         with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-           fetch-depth: 0
-       - name: Coverage
-         run: npm run test --coverage --watchAll
-       - name: Upload coverage reports to Codecov
-
-         uses: codecov/codecov-action@v3     
-           
-         env:
-           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-           
+          
 
   Buildartifacts:
      needs: [CodeQLanalysis,Sonarcloud]
@@ -109,7 +92,7 @@ jobs:
       - name: Build artifacts
         run: npm run build
 
-  Testcoverage:
+  CodeandTestcoverage:
      needs: Buildartifacts
      runs-on: 'ubuntu-latest'     
      steps:
@@ -123,6 +106,11 @@ jobs:
         run: npm run test --coverage
       - name: Unittesting
         run: npm run test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3     
+        
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
        
   Build_Docker_Image:
      needs: Testcoverage
@@ -151,16 +139,16 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  Buildazure:
-     needs: Build_Docker_Image
-     runs-on: 'ubuntu-latest'  
-     steps:
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'reactapptesting1'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DB4D53E2B92A45BC8149B0AA82ED535C }}
-          package: .
+ # Buildazure:
+  #   needs: Build_Docker_Image
+   #  runs-on: 'ubuntu-latest'  
+    # steps:
+    #  - name: 'Deploy to Azure Web App'
+    #    uses: azure/webapps-deploy@v2
+    #    with:
+    #      app-name: 'reactapptesting1'
+    #      publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DB4D53E2B92A45BC8149B0AA82ED535C }}
+    #      package: .
 
 
 
