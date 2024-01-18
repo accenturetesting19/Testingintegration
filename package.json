@@ -20,7 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:cov": "nyc --reporter=lcov mocha",
     "eject": "react-scripts eject",
+    "coverage": "codecov",
     "lint": "eslint --config ./.eslintrc.json \"**/*.{ts,tsx,js,jsx,html,yml}\"",
     "lint:check": "eslint --config ./.eslintrc.json \"**/*.{ts,tsx,js,jsx,html,yml}\"",
     "lint:fix": "eslint --config ./.eslintrc.json --fix \"**/*.{ts,tsx,js,jsx,html,yml}\"",
@@ -49,6 +51,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
+    "codecov": "^3.8.3",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -56,6 +59,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "nyc": "^15.1.0",
     "prettier": "^3.1.0"
   }
 }
