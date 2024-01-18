@@ -1,0 +1,36 @@
+name: "CodeQL"
+
+on:
+    pull_request:
+       branches: 
+        - gh-pages
+        
+    push:
+       branches: 
+        - main
+        
+  
+
+jobs:
+  Analysis:
+    runs-on: ubuntu-latest
+     
+    steps:
+      - uses: actions/checkout@v4
+        with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: Analyze with SonarCloud
+
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: src
+          args: >
+           -Dsonar.organization=sonarscankey
+           -Dsonar.projectKey=accenturetesting19_Testingintegration
+           -Dsonar.python.coverage.reportPaths=coverage.xml
+           
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+      

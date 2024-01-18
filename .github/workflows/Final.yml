@@ -1,0 +1,160 @@
+name: Continuousintegration
+on:
+  push:
+    branches:
+      - master
+      - deploy
+  pull_request:
+    branches:
+      - main
+      - master
+      - deploy
+
+jobs:
+  CodeQLanalysis:
+    runs-on: 'ubuntu-latest'
+    name: scriptlanguageanalyse
+    
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['typescript']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+    #  - name: Build artifacts
+     #   run: npm run build
+     # - name: Test and coverage
+     #   run: npm run test
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
+          upload: False
+          output: sarif-results
+
+  Sonarcloud:
+     needs: CodeQLanalysis
+     runs-on: ubuntu-latest
+     
+     steps:
+       - uses: actions/checkout@v4
+         with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+           fetch-depth: 0
+       - name: Analyze with SonarCloud
+
+         uses: SonarSource/sonarcloud-github-action@master
+         with:
+           projectBaseDir: src
+           args: >
+            -Dsonar.organization=sonarscankey
+            -Dsonar.projectKey=accenturetesting19_Testingintegration
+            -Dsonar.qualitygate.wait=true
+            
+           
+         env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
+           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+  
+          
+
+  Buildartifacts:
+     needs: [CodeQLanalysis,Sonarcloud]
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifacts
+        run: npm run build
+
+  CodeandTestcoverage:
+     needs: Buildartifacts
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifacts
+        run: npm run build
+      - name: Coverage
+        run: npm run test --coverage --watchall
+      - name: Unittesting
+        run: npm run test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3     
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          #files: ./coverage1.xml,./coverage2.xml
+          directory: ./coverage/lcov-report/ # optional
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+       
+  Build_Docker_Image:
+     needs: CodeandTestcoverage
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMAGE_NAME }} .
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMAGE_NAME }} 
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+ # Buildazure:
+  #   needs: Build_Docker_Image
+   #  runs-on: 'ubuntu-latest'  
+    # steps:
+    #  - name: 'Deploy to Azure Web App'
+    #    uses: azure/webapps-deploy@v2
+    #    with:
+    #      app-name: 'reactapptesting1'
+    #      publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DB4D53E2B92A45BC8149B0AA82ED535C }}
+    #      package: .
+
+
+
+

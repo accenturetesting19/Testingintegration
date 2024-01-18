@@ -1,0 +1,116 @@
+name: Continuousintegration
+on:
+    
+  pull_request:
+    branches:
+      - ghpages
+      
+      
+
+jobs:
+  CodeQLanalysis:
+    runs-on: 'ubuntu-latest'
+    name: scriptlanguageanalyse
+    
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['Javascript']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+    #  - name: Build artifacts
+     #   run: npm run build
+     # - name: Test and coverage
+     #   run: npm run test
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
+          upload: False
+          output: sarif-results
+  Buildartifacts:
+     needs: CodeQLanalysis
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifacts
+        run: npm run build
+
+  Testcoverage:
+     needs: Buildartifacts
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build artifacts
+        run: npm run build
+      - name: Unittesting and coverage
+        run: npm run test
+
+  Build_Docker_Image:
+     needs: Testcoverage
+     runs-on: 'ubuntu-latest'     
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMAGE_NAME }} .
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMAGE_NAME }} 
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  Buildazure:
+     needs: Build_Docker_Image
+     runs-on: 'ubuntu-latest'  
+     steps:
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'reactapptesting1'
+      #    slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DB4D53E2B92A45BC8149B0AA82ED535C }}
+          package: .
