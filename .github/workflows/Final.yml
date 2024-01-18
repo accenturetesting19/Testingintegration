@@ -103,14 +103,19 @@ jobs:
       - name: Build artifacts
         run: npm run build
       - name: Coverage
-        run: npm run test --coverage
+        run: npm run test --coverage --watchall
       - name: Unittesting
         run: npm run test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3     
-        
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage1.xml,./coverage2.xml
+          directory: ./coverage/reports/ # optional
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
        
   Build_Docker_Image:
      needs: CodeandTestcoverage
