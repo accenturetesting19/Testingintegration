@@ -110,8 +110,8 @@ jobs:
         uses: codecov/codecov-action@v3     
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage1.xml,./coverage2.xml
-          directory: ./coverage/reports/ # optional
+          #files: ./coverage1.xml,./coverage2.xml
+          directory: ./coverage/lcov-report/ # optional
           flags: unittests # optional
           name: codecov-umbrella # optional
           fail_ci_if_error: true # optional (default = false)
