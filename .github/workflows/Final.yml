@@ -4,16 +4,15 @@ on:
     branches:
       - master
       - deploy
-  pull_request:
-    branches:
-      - main
-      - master
-      - deploy
+  pull_request_review:
+    types: [submitted]
+
 
 jobs:
   CodeQLanalysis:
     runs-on: 'ubuntu-latest'
-    name: scriptlanguageanalyse
+    if: github.event.review.state == 'approved'
+    name: CodeQLanalysis
     
     permissions:
       actions: read
